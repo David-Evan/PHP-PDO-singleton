@@ -1,0 +1,69 @@
+<?php
+
+/**
+* Database Signleton for PHP PDO Instance
+*/
+class Database
+{
+  /**
+   * PDO Object
+   *
+   * @var PDO
+   */
+  private $_PDO = null;
+
+  /**
+   * Database Object (itself)
+   *
+   * @var Database
+   * @static
+   */
+  private static $_dataBaseInstance = null;
+
+  const SQL_USER = 'root';
+  const SQL_SERVER = 'localhost';
+  const SQL_PASSWORD = '';
+
+  const DATABASE = 'serenity';
+
+  /**
+   * Construct
+   *
+   * @param void
+   * @return void
+   * @see PDO::__construct()
+   * @access private
+   */
+  private function __construct()
+  {
+    $this->_PDO = new PDO('mysql:dbname='.self::DATABASE.';host='.self::SQL_SERVER,self::SQL_USER ,self::SQL_PASSWORD);
+  }
+
+   /**
+    * Create and give back Database Instance
+    *
+    * @access public
+    * @static
+    * @param void
+    * @return Database $_dataBaseInstance
+    */
+  public static function getInstance()
+  {
+    if(is_null(self::$_dataBaseInstance))
+    {
+      self::$_dataBaseInstance = new Database();
+    }
+    return self::$_dataBaseInstance;
+  }
+
+  /**
+   * Use query method from PDO Instance (Shortcut for : $Database)
+   *
+   * @param string $query - query string
+   * @return PDOStatement Give back PDOStatement
+   */
+  public function query($query)
+  {
+    return $this->_PDO->query($query);
+  }
+}
